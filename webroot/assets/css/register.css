@@ -1,0 +1,238 @@
+  /* ── Page ── */
+  body {
+      background-color: #f0ece6;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+  }
+
+  /* ── Card wrapper ── */
+  .signup-card {
+      width: 100%;
+      max-width: 480px;
+      background: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.10);
+  }
+
+  /* ── Card header banner ── */
+  .card-banner {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 2.5rem 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+  }
+
+  .card-banner::before {
+      content: '';
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.04);
+      top: -60px;
+      right: -60px;
+  }
+
+  .card-banner::after {
+      content: '';
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      bottom: -40px;
+      left: 30px;
+  }
+
+  .card-banner .banner-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      font-size: 22px;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+  }
+
+  .card-banner h1 {
+      font-family: 'Playfair Display', serif;
+      color: #ffffff;
+      font-size: 1.75rem;
+      margin-bottom: 0.35rem;
+      position: relative;
+      z-index: 1;
+  }
+
+  .card-banner p {
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 0.875rem;
+      margin: 0;
+      font-weight: 300;
+      position: relative;
+      z-index: 1;
+  }
+
+  /* ── Form body ── */
+  .card-body-custom {
+      padding: 2rem 2.5rem 2.5rem;
+  }
+
+  /* ── Form label ── */
+  .form-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #6b6b80;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+  }
+
+  /* ── Input group ── */
+  .input-group {
+      border: 1.5px solid #e8e6f0;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      background: #fafaf9;
+  }
+
+  .input-group:focus-within {
+      border-color: #0f3460;
+      box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.10);
+      background: #ffffff;
+  }
+
+  .input-group-text {
+      background: transparent;
+      border: none;
+      color: #9492a8;
+      padding: 0 0.9rem;
+      font-size: 1rem;
+      transition: color 0.2s;
+  }
+
+  .input-group:focus-within .input-group-text {
+      color: #0f3460;
+  }
+
+  .form-control {
+      border: none;
+      background: transparent;
+      padding: 0.72rem 0.9rem 0.72rem 0;
+      font-size: 0.9rem;
+      color: #1a1a2e;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+  }
+
+  .form-control:focus {
+      box-shadow: none;
+      background: transparent;
+  }
+
+  .form-control::placeholder {
+      color: #c2c1d0;
+      font-weight: 300;
+  }
+
+  /* ── Password toggle ── */
+  .btn-pwd-toggle {
+      background: transparent;
+      border: none;
+      color: #9492a8;
+      padding: 0 0.9rem;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: color 0.2s;
+  }
+
+  .btn-pwd-toggle:hover {
+      color: #0f3460;
+  }
+
+  /* ── Divider ── */
+  .form-divider {
+      border: none;
+      border-top: 1px solid #f0ece6;
+      margin: 1.5rem 0;
+  }
+
+  /* ── Submit button ── */
+  .btn-signup {
+      background: #0f3460;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.82rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.02em;
+      width: 100%;
+      transition: background 0.25s ease, transform 0.15s ease;
+  }
+
+  .btn-signup:hover {
+      background: #16213e;
+      transform: translateY(-1px);
+      color: #fff;
+  }
+
+  .btn-signup:active {
+      transform: translateY(0);
+  }
+
+  /* ── Footer text ── */
+  .signin-link {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #9492a8;
+      margin-top: 1.25rem;
+      margin-bottom: 0;
+  }
+
+  .signin-link a {
+      color: #0f3460;
+      font-weight: 500;
+      text-decoration: none;
+  }
+
+  .signin-link a:hover {
+      text-decoration: underline;
+  }
+
+  /* ── Field group spacing ── */
+  .field-group {
+      margin-bottom: 1.1rem;
+  }
+
+  /* ── Password strength bar ── */
+  .strength-bar-wrap {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+  }
+
+  .strength-seg {
+      height: 3px;
+      flex: 1;
+      border-radius: 99px;
+      background: #e8e6f0;
+      transition: background 0.3s;
+  }
+
+  .strength-label {
+      font-size: 0.72rem;
+      color: #9492a8;
+      margin-top: 4px;
+  }
