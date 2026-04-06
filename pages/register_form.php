@@ -26,7 +26,7 @@
     <div class="card-banner">
       <div class="banner-icon"><i class="bi bi-person-plus-fill"></i></div>
       <h1>Account Registration</h1>
-      <p>STEP 1 OF 2</p>
+      <p>Join us — it only takes a minute.</p>
     </div>
 
     <!-- Form -->
