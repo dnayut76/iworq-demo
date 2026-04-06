@@ -2,8 +2,8 @@
 
 // ─── Bootstrap ───────────────────────────────────────────────────────────────
 
-$webroot = $_SERVER['DOCUMENT_ROOT'];
-$phproot = realpath($webroot . "/../php");
+$approot = dirname($_SERVER['DOCUMENT_ROOT']);
+$phproot = realpath($approot . "/php");
 
 require $phproot . "/vendor/autoload.php";
 
@@ -26,18 +26,18 @@ if (empty($request)) {
 // ─── Routes ──────────────────────────────────────────────────────────────────
 
 $routes = [
-    'register'        => 'components/register_form.php',
-    'register2'       => 'components/register_form2.php',
-    'register_submit' => 'components/register_form_submit.php',
-    'login'           => 'components/login_form.php',
+    'register'        => $approot.'/pages/register_form.php',
+    'register2'       => $approot.'/pages/register_form2.php',
+    'register_submit' => $approot.'/pages/register_form_submit.php',
+    'login'           => $approot.'/pages/login_form.php',
 ];
 
 // Dev-only routes — expose diagnostics tools locally
 $devRoutes = [
-    'phpinfo'      => '../php/tools/phpinfo.php',
-    'print_config' => '../php/tools/print_config.php',
-    'gen_pepper'   => '../php/tools/gen_pepper.php',
-    'passwd_test'  => '../php/tools/passwd_test.php',
+    'phpinfo'      => $phproot.'/tools/phpinfo.php',
+    'print_config' => $phproot.'/tools/print_config.php',
+    'gen_pepper'   => $phproot.'/tools/gen_pepper.php',
+    'passwd_test'  => $phproot.'/tools/passwd_test.php',
 ];
 
 if ($config->get('development')) {
