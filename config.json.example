@@ -1,0 +1,11 @@
+{
+  "db": {
+    "user": "tmpuser",
+    "pass": "tmppass",
+    "db": "tmpdb",
+  },
+  "auth": {
+    "pepper": "4f7dc525e16348e85ff941ea346f9a0e750cd59267a4a11fb84502af6420f5bf"
+  },
+  "development": false
+}

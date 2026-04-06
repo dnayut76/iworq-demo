@@ -1,44 +1,57 @@
 <?php
-// Simple PHP Router
 
-// Set up some global variables
+// ─── Bootstrap ───────────────────────────────────────────────────────────────
+
 $webroot = $_SERVER['DOCUMENT_ROOT'];
-$phproot = realpath($webroot."/../php");
+$phproot = realpath($webroot . "/../php");
 
-// Include composer autoloader for 3rd party libraries
-require $phproot."/vendor/autoload.php";
+require $phproot . "/vendor/autoload.php";
 
-// Capture the current URL path
-$request = trim( strtolower( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH )));
+$config = new App\Config();
 
-// Default route
-if (empty($request) || $request == "/") $request = "register_form1";
-
-// Define your routes mapping: 'URL' => 'file'
-$routes = [
-    'register_form1' => 'components/register_form1.php',
-];
-
-// Load the page
-if (
-     // Route exists ?
-     array_key_exists($request, $routes)
-     &&
-     // File exists on the server
-     file_exists($webroot."/".$routes[$request])
-    ) {
-
-    // Load and parse PHP file
-    require $routes[$request];
-
-// Otherwise, return an error to the browser
-} else {
-
-    // Handle 404 - Not Found
-    http_response_code(404);
-    echo "<h1>404 Page Not Found</h1>";
-
+// Dev helpers (never loaded in production)
+if ($config->get('development')) {
+    require $phproot . '/dev.php';
 }
 
-?>
+// ─── Request ─────────────────────────────────────────────────────────────────
+
+// Strip leading slash and normalise to lowercase
+$request = ltrim(strtolower(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)), "/");
+
+if (empty($request)) {
+    $request = "register";
+}
+
+// ─── Routes ──────────────────────────────────────────────────────────────────
+
+$routes = [
+    'register'        => 'components/register_form.php',
+    'register2'       => 'components/register_form2.php',
+    'register_submit' => 'components/register_form_submit.php',
+    'login'           => 'components/login_form.php',
+];
+
+// Dev-only routes — expose diagnostics tools locally
+$devRoutes = [
+    'phpinfo'      => '../php/tools/phpinfo.php',
+    'print_config' => '../php/tools/print_config.php',
+    'gen_pepper'   => '../php/tools/gen_pepper.php',
+    'passwd_test'  => '../php/tools/passwd_test.php',
+];
+
+if ($config->get('development')) {
+    $routes = array_merge($routes, $devRoutes);
+}
+
+// ─── Dispatch ─────────────────────────────────────────────────────────────────
+
+$routeFile = $routes[$request] ?? null;
+
+if ($routeFile && file_exists($webroot . "/" . $routeFile)) {
+    require $routeFile;
+} else {
+    http_response_code(404);
+    echo "<h1>404 - Page Not Found</h1>";
+}
 

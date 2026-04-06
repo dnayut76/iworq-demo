@@ -1,2 +1,4 @@
 php/vendor
 php/vendor/*
+db/access
+config.json

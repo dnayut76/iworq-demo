@@ -1,4 +1,13 @@
 
+function showError(inputId, msg) {
+    const wrap = document.getElementById(inputId).closest('.input-group');
+    const err  = document.createElement('p');
+    err.className = 'err-msg';
+    err.style.cssText = 'font-size:0.76rem;color:#c0392b;margin:4px 0 0;';
+    err.textContent = msg;
+    wrap.insertAdjacentElement('afterend', err);
+}
+
 /* ── Password visibility toggle ── */
 function togglePwd(inputId, iconId) {
     const input = document.getElementById(inputId);
@@ -20,10 +29,15 @@ const labels = ['Weak', 'Fair', 'Good', 'Strong'];
 
 function checkStrength(val) {
     let score = 0;
-    if (val.length >= 8)              score++;
-    if (/[A-Z]/.test(val))            score++;
-    if (/[0-9]/.test(val))            score++;
-    if (/[^A-Za-z0-9]/.test(val))    score++;
+    if (val.length >= 8)          score++;
+    if (/[A-Z]/.test(val))        score++;
+    if (/[0-9]/.test(val))        score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    return(score);
+}
+
+function updateStrength(val) {
+    score = checkStrength(val);
 
     segs.forEach((s, i) => {
         s.style.background = i < score ? colors[score - 1] : '#e8e6f0';
@@ -37,60 +51,69 @@ function checkStrength(val) {
 }
 
 /* ── Form validation ── */
-document.getElementById('registrationForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const pwd  = document.getElementById('password').value;
-    const cpwd = document.getElementById('confirmPassword').value;
-    let valid  = true;
+$(function () {   
 
-    /* Clear previous errors */
-    document.querySelectorAll('.err-msg').forEach(el => el.remove());
+    $('#registrationForm').on('submit', function(e) {
+        e.preventDefault();
 
-    /* Password match */
-    if (pwd !== cpwd) {
-        showError('confirmPassword', 'Passwords do not match.');
-        valid = false;
-    }
+        const pwd  = document.getElementById('password').value;
+        const cpwd = document.getElementById('confirmPassword').value;
+        let valid  = true;
 
-    /* Phone: must be 10 digits */
-    const phoneDigits = document.getElementById('phone').value.replace(/\D/g, '');
-    if (phoneDigits.length !== 10) {
-        showError('phone', 'Please enter a complete 10-digit phone number.');
-        document.getElementById('phone').closest('.input-group').style.borderColor = '#e74c3c';
-        valid = false;
-    }
+        /* Clear previous errors */
+        document.querySelectorAll('.err-msg').forEach(el => el.remove());
 
-    /* Other required fields (skip phone — already checked) */
-    ['fullName', 'address', 'username', 'password', 'confirmPassword'].forEach(id => {
-        const el = document.getElementById(id);
-        if (!el.value.trim()) {
-            showError(id, 'This field is required.');
+        if (checkStrength(pwd) < 4) {
+            showError('password', 'Passwords strength is too weak.');
             valid = false;
         }
+
+        /* Password match */
+        if (pwd !== cpwd) {
+            showError('confirmPassword', 'Passwords do not match.');
+            valid = false;
+        }
+
+        /* Phone: must be 10 digits */
+        const phoneDigits = document.getElementById('phone').value.replace(/\D/g, '');
+        if (phoneDigits.length !== 10) {
+            showError('phone', 'Please enter a complete 10-digit phone number.');
+            document.getElementById('phone').closest('.input-group').style.borderColor = '#e74c3c';
+            valid = false;
+        }
+
+        /* Other required fields (skip phone — already checked) */
+        ['fullName', 'email','password', 'confirmPassword'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el.value.trim()) {
+                showError(id, 'This field is required.');
+                valid = false;
+            }
+        });
+
+        /* Cancel form submission if UI validation failed */    
+        if (!valid) return false;
+
+        /* Terms */
+        if (!document.getElementById('agreeTerms').checked) {
+            alert('Please accept the Terms of Service to continue.');
+            return false;
+        }
+        
+        /* Submit the form to the registration handler */
+        $.ajax({
+            url: '/register_submit', // Form submission handler URL
+            type: 'POST',
+            data: $(this).serialize(), // Encodes form elements for submission
+            success: function(response) {
+                $('#registrationResults').html(response).show(); 
+            },
+            error: function() {
+                $('#registrationResults').html('An error occurred.').show();
+            }
+        });
     });
-
-    /* Terms */
-    if (!document.getElementById('agreeTerms').checked) {
-        alert('Please accept the Terms of Service to continue.');
-        valid = false;
-    }
-
-    if (valid) {
-        const btn = document.querySelector('.btn-signup');
-        btn.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Account Created!';
-        btn.style.background = '#27ae60';
-        btn.disabled = true;
-    }
 });
-
-function showError(inputId, msg) {
-    const wrap = document.getElementById(inputId).closest('.input-group');
-    const err  = document.createElement('p');
-    err.className = 'err-msg';
-    err.style.cssText = 'font-size:0.76rem;color:#c0392b;margin:4px 0 0;';
-    err.textContent = msg;
-    wrap.insertAdjacentElement('afterend', err);
-}
 
 /* ── jQuery phone number forced formatter ── */
 $(function () {
@@ -143,23 +166,23 @@ $(function () {
         if (e.which < 48 || e.which > 57) e.preventDefault();
     });
 
-        /* Reset border on blur if empty */
-        $('#phone').on('blur', function () {
-            const digits = $(this).val().replace(/\D/g, '');
-            if (digits.length === 0) {
-                $(this).closest('.input-group').css('border-color', '');
-                $('#phoneFormatHint').text('Format: (555) 555-5555').css('color', '#9492a8');
-            } else if (digits.length < 10) {
-                $(this).closest('.input-group').css('border-color', '#e74c3c');
-                $('#phoneFormatHint').text('Please enter a complete 10-digit number.').css('color', '#c0392b');
-            }
-        });
+    /* Reset border on blur if empty */
+    $('#phone').on('blur', function () {
+        const digits = $(this).val().replace(/\D/g, '');
+        if (digits.length === 0) {
+            $(this).closest('.input-group').css('border-color', '');
+            $('#phoneFormatHint').text('Format: (555) 555-5555').css('color', '#9492a8');
+        } else if (digits.length < 10) {
+            $(this).closest('.input-group').css('border-color', '#e74c3c');
+            $('#phoneFormatHint').text('Please enter a complete 10-digit number.').css('color', '#c0392b');
+        }
+    });
 
-        /* Restore default border on focus */
-        $('#phone').on('focus', function () {
-            const digits = $(this).val().replace(/\D/g, '');
-            if (digits.length < 10) {
-                $(this).closest('.input-group').css('border-color', '');
-            }
-        });
+    /* Restore default border on focus */
+    $('#phone').on('focus', function () {
+        const digits = $(this).val().replace(/\D/g, '');
+        if (digits.length < 10) {
+            $(this).closest('.input-group').css('border-color', '');
+        }
+    });
 });

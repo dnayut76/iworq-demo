@@ -1,5 +1,11 @@
 {
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
     "require": {
-        "respect/validation": "^2.4"
+        "illuminate/validation": "^13.3",
+        "illuminate/translation": "^13.3"
     }
 }
